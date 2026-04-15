@@ -1,0 +1,68 @@
+# Barcelona Open Data — dataset registry
+# Used by extractors to discover CKAN package IDs, resource URLs, and metadata.
+# All API calls go through src/utils/api_client.py.
+
+ckan_base_url: "https://opendata-ajuntament.barcelona.cat/data/api/action/"
+
+datasets:
+
+  bicing:
+    description: "Bicing (public bike sharing) station info and status snapshots"
+    package_id: "6aa3416d-ce1a-494d-861b-7bd07f069600"
+    raw_table_info:   "bicing_station_info"
+    raw_table_status: "bicing_station_status"
+    update_frequency: monthly
+    format: "7z (CSV inside)"
+    notes: >
+      Monthly 7z archives, one per calendar month.
+      Station info is static; status contains timestamped availability rows.
+
+  meteorology:
+    description: "Daily meteorological statistics from 4 Barcelona stations (1996–present)"
+    package_id: "cf1de5ca-9d1c-424c-9543-8ab23e7f478e"
+    raw_table: "meteo_daily"
+    update_frequency: daily
+    format: CSV
+    stations:
+      - code: X2
+        name: "Barcelona - Zoo"
+      - code: X4
+        name: "Barcelona - El Raval"
+      - code: X8
+        name: "Barcelona - Zona Universitària"
+      - code: X5
+        name: "Barcelona - Observatori Fabra"
+    variables:
+      TM:     "Mean temperature (°C)"
+      TX:     "Max temperature (°C)"
+      TN:     "Min temperature (°C)"
+      HRM:    "Mean relative humidity (%)"
+      PPT24H: "24h accumulated precipitation (mm)"
+      VVM10:  "Mean wind speed at 10m (m/s)"
+      RS24H:  "Solar radiation (W/m²)"
+      PN:     "Station atmospheric pressure (hPa)"
+    resource_ids_by_year:
+      2026: "34726b8b-c1ea-44aa-adcd-1820a7bf9b24"
+      2025: "00904de2-8660-4c41-92e3-66e7c87265be"
+      2024: "10dbcf20-2e4c-4c94-97e3-68f36ee0056b"
+
+  noise:
+    description: "Environmental noise monitoring network — 1-minute Leq readings"
+    package_id: "919d1ce6-6d42-4feb-b2db-3a68ff065b7c"
+    raw_table: "noise_readings"
+    update_frequency: monthly
+    format: "ZIP (CSV inside, semicolon-separated)"
+    notes: >
+      Monthly ZIP archives named YYYY_MMNomMes_XarxaSoroll_EqMonitor_Dades_1Min.zip.
+      Each ZIP contains one CSV per monitoring unit.
+      Key metric: Leq (equivalent continuous sound level, dB).
+
+  geography:
+    description: "Administrative units — 10 districts, 73 neighbourhoods"
+    package_id: "divisions-administratives"
+    raw_table: "administrative_units"
+    update_frequency: static
+    format: CSV
+    notes: >
+      Conformed geographic dimension. Provides district_id and neighborhood_id
+      used as join keys across all other datasets.

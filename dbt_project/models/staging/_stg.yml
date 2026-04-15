@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: stg_bicing_station_info
+    description: "Cleaned Bicing station metadata — one row per station"
+    columns:
+      - name: station_id
+        tests: [not_null, unique]
+      - name: latitude
+        tests: [not_null]
+      - name: longitude
+        tests: [not_null]
+      - name: capacity
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 100
+
+  - name: stg_bicing_station_status
+    description: "Normalised Bicing availability snapshots"
+    columns:
+      - name: station_id
+        tests: [not_null]
+      - name: num_bikes_available
+        tests: [not_null]
+      - name: num_docks_available
+        tests: [not_null]
+      - name: last_reported_at
+        tests: [not_null]
+
+  - name: stg_meteo_daily
+    description: "Long-format daily meteorological readings"
+    columns:
+      - name: station_code
+        tests: [not_null]
+      - name: reading_date
+        tests: [not_null]
+      - name: variable
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["TM","TX","TN","HRM","PPT24H","VVM10","RS24H","PN"]
+      - name: value
+        tests: [not_null]
+
+  - name: stg_noise_readings
+    description: "1-minute Leq noise readings"
+    columns:
+      - name: reading_date
+        tests: [not_null]
+      - name: leq_db
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 140
+
+  - name: stg_administrative_units
+    description: "Geographic reference — districts and neighbourhoods"
+    columns:
+      - name: district_id
+        tests: [not_null]
+      - name: district_name
+        tests: [not_null]
+      - name: neighborhood_id
+        tests: [not_null]
+      - name: neighborhood_name
+        tests: [not_null]

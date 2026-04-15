@@ -1,0 +1,85 @@
+version: 2
+
+models:
+  - name: dim_geography
+    description: "Geographic reference dimension — 10 districts, 73 neighbourhoods"
+    columns:
+      - name: geo_key
+        tests: [not_null, unique]
+      - name: district_id
+        tests: [not_null]
+      - name: neighborhood_id
+        tests: [not_null, unique]
+      - name: district_name
+        tests: [not_null]
+      - name: neighborhood_name
+        tests: [not_null]
+
+  - name: dim_bicing_stations
+    description: "Bicing station dimension with location and capacity"
+    columns:
+      - name: station_id
+        tests: [not_null, unique]
+      - name: station_name
+        tests: [not_null]
+      - name: latitude
+        tests: [not_null]
+      - name: longitude
+        tests: [not_null]
+      - name: capacity
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 100
+
+  - name: fct_bicing_availability
+    description: "Bicing availability snapshots — grain: station × timestamp"
+    columns:
+      - name: availability_key
+        tests: [not_null, unique]
+      - name: station_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_bicing_stations')
+              field: station_id
+      - name: last_reported_at
+        tests: [not_null]
+      - name: bike_occupancy_rate
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              where: "bike_occupancy_rate is not null"
+
+  - name: fct_meteo_daily
+    description: "Daily weather observations — grain: station × date"
+    columns:
+      - name: meteo_key
+        tests: [not_null, unique]
+      - name: station_code
+        tests: [not_null]
+      - name: reading_date
+        tests: [not_null]
+
+  - name: fct_noise_daily
+    description: "Daily noise aggregates per monitor — grain: monitor × date"
+    columns:
+      - name: noise_key
+        tests: [not_null, unique]
+      - name: monitor_id
+        tests: [not_null]
+      - name: reading_date
+        tests: [not_null]
+      - name: leq_mean_db
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 140
+      - name: data_completeness_rate
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1

@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw tables loaded by the Python extraction layer"
+    schema: raw
+
+    tables:
+      - name: bicing_station_info
+        description: "Static Bicing station metadata (location, capacity)"
+        columns:
+          - name: station_id
+            description: "Unique station identifier"
+            tests: [not_null, unique]
+
+      - name: bicing_station_status
+        description: "Monthly Bicing availability snapshots"
+        columns:
+          - name: station_id
+            tests: [not_null]
+
+      - name: meteo_daily
+        description: "Daily meteorological readings, long format (one row per station/date/variable)"
+        columns:
+          - name: station_code
+            tests: [not_null]
+          - name: reading_date
+            tests: [not_null]
+          - name: variable
+            tests: [not_null]
+          - name: value
+            tests: [not_null]
+
+      - name: noise_readings
+        description: "1-minute Leq noise measurements from the monitoring network"
+        columns:
+          - name: reading_date
+            tests: [not_null]
+          - name: leq_db
+            tests: [not_null]
+
+      - name: administrative_units
+        description: "Geographic reference — 10 districts, 73 neighbourhoods"
+        columns:
+          - name: district_id
+            tests: [not_null]

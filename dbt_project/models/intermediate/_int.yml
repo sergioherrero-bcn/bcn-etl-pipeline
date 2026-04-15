@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: int_bicing_availability
+    description: >
+      Bicing status snapshots enriched with station metadata.
+      Adds derived metrics: occupancy rate, availability flags.
+    columns:
+      - name: station_id
+        tests: [not_null]
+      - name: last_reported_at
+        tests: [not_null]
+      - name: bike_occupancy_rate
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              where: "bike_occupancy_rate is not null"
+
+  - name: int_meteo_pivoted
+    description: "Wide-format daily meteorological data (one row per station/date)"
+    columns:
+      - name: station_code
+        tests: [not_null]
+      - name: reading_date
+        tests: [not_null]
+
+  - name: int_noise_daily_agg
+    description: "Daily aggregated noise levels per monitoring unit"
+    columns:
+      - name: reading_date
+        tests: [not_null]
+      - name: monitor_id
+        tests: [not_null]
+      - name: leq_mean_db
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 140

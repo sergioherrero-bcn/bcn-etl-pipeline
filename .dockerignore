@@ -1,0 +1,12 @@
+.git
+.env
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.coverage
+htmlcov/
+dbt_project/target/
+dbt_project/dbt_packages/
+logs/
+*.log
