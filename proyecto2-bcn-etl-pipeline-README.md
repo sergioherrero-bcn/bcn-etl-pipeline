@@ -62,7 +62,7 @@ Building ETL scripts is easy. Building a **maintainable, tested, documented, and
 
 ```bash
 # Clone
-git clone https://github.com/sergioherrero/bcn-etl-pipeline.git
+git clone https://github.com/sergioherrero-bcn/bcn-etl-pipeline.git
 cd bcn-etl-pipeline
 
 # Start all services
@@ -144,7 +144,7 @@ bcn-etl-pipeline/
 
 ## Author
 
-**Sergio Herrero** — [LinkedIn](https://linkedin.com/in/sergioherrero) · [GitHub](https://github.com/sergioherrero)
+**Sergio Herrero** — [LinkedIn](https://linkedin.com/in/seherrero) · [GitHub](https://github.com/sergioherrero-bcn)
 
 ## License
 
